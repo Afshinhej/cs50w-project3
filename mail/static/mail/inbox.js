@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelector("#compose-body").value
     );
 
-      load_mailbox('sent');
-    
+    load_mailbox('sent');
+
     // stop form from submitting
     return false;
   };
@@ -133,10 +133,19 @@ function list_email(mailbox) {
 
     });
     
-    // When on inbox, archive button have to be shown
+    // When on inbox or archive, archive button have to be shown
     
-    if (mailbox === 'inbox'){
-      document.querySelectorAll('.archiveDiv').forEach( (Div) => Div.style.display = 'block')
+    if (mailbox === 'inbox' || mailbox === "archive"){
+      document.querySelectorAll('.archiveDiv').forEach( (Div) => Div.style.display = 'block');
+      document.querySelectorAll('.archiveButton').forEach( (button) => {
+      
+        if (button.dataset.archived === 'true') {
+          button.innerHTML = 'Unarchive';
+        } else {
+          button.innerHTML = 'Archive';
+        }
+      
+      })
     } else {
       document.querySelectorAll('.archiveDiv').forEach( (Div) => Div.style.display = 'none')
     }
@@ -146,8 +155,14 @@ function list_email(mailbox) {
     document.querySelectorAll('.archiveButton').forEach(button => {
 
       button.onclick = () => {
-        archivedStatus (button);
-        location.reload();
+        if (button.dataset.archived === 'false') {
+          archivedStatus (button);
+          location.reload();
+        } else {
+          unarchivedStatus (button);
+          location.reload();
+
+        }
       } 
 
     })
@@ -230,7 +245,7 @@ function load_mail(email) {
   document.querySelector('#emails-view').innerHTML = '';
   document.querySelector('#emails-view').append(subdiv1, subdiv2, subdiv3, subdiv4, replyButton, archiveButton, hr, subdiv5);
   
-  if (document.querySelector('h2').innerHTML === email.sender) {
+  if (document.querySelector('h2').innerHTML === email.sender && document.querySelector('h2').innerHTML !== email.recipients[0]) {
 
     document.querySelector('.archiveButton').style.display = 'none';
 
@@ -257,7 +272,7 @@ function load_mail(email) {
 
   })
 
-  reply(email.sender, email.subject, email.body, email.timestamp)
+  reply(email.sender, email.subject, email.body, email.timestamp);
 
 };
 
@@ -294,6 +309,12 @@ function emailStatus(email) {
 function archivedStatus (button) {
 
   archiveemail(button.dataset.id);
+
+}
+
+function unarchivedStatus (button) {
+
+  unarchiveemail(button.dataset.id);
 
 }
 
