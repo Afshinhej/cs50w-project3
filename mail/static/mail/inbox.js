@@ -20,8 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
       load_mailbox
     );
 
-  
-
     // stop form from submitting
     return false;
   };
