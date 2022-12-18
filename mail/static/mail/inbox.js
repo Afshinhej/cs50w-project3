@@ -16,10 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
     send_email(
       document.querySelector("#compose-recipients").value,
       document.querySelector("#compose-subject").value,
-      document.querySelector("#compose-body").value
+      document.querySelector("#compose-body").value,
+      load_mailbox
     );
 
-    load_mailbox('sent');
+  
 
     // stop form from submitting
     return false;
@@ -59,7 +60,7 @@ function load_mailbox(mailbox) {
 };
 
 // a function for sending an email 
-function send_email(recipients, subject, body) {
+function send_email(recipients, subject, body, myCallback) {
 
   const data ={
     recipients:`${recipients}`,
@@ -73,6 +74,7 @@ function send_email(recipients, subject, body) {
   })
   .then(response => response.json())
   
+  myCallback('sent');
 
 };
 
